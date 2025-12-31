@@ -1,29 +1,20 @@
-// app.js
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-
-const authRoute = require('./routes/authRoute');
-const errorHandler = require('./middlewares/errorHandler');
+import express from "express";
+import cors from "cors";
+import authRoutes from "./routes/authRoute.js";
+import stationRoutes from './routes/stationRoutes.js';
+import mixingGroupRoutes from './routes/mixingGroupRoutes.js';
+import mixingRoutes from './routes/mixingRoutes.js';
+import varietyRoutes from './routes/varietyRoutes.js';
 
 const app = express();
 
-// Middleware
-app.use(helmet());
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+app.use("/api/auth", authRoutes);
+app.use("/api/stations", stationRoutes);
+app.use("/api/mixing-groups", mixingGroupRoutes);
+app.use("/api/mixings", mixingRoutes);
+app.use("/api/varieties", varietyRoutes);
 
-// Routes
-app.get('/health', (_, res) => res.status(200).json({ status: 'ok' }));
-app.use('/api/auth', authRoute);
-
-// Error handling (last)
-app.use(errorHandler);
-
-module.exports = app;
+export default app;
